@@ -25,3 +25,12 @@ cd langchain-documents
 pipenv install -r requirements.txt
 ```
 
+
+
+### Running the Application
+
+Start the application by running:
+
+```bash
+pipenv run python main.py
+```
