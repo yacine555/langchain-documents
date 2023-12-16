@@ -7,7 +7,6 @@ def scrape_linkedin_profile(linkedin_profile_url: str):
     Manually scrape the information from the LinkedIn profile"""
 
     api_endpoint = "https://nubela.co/proxycurl/api/v2/linkedin"
-  
 
     header_dic = {"Authorization": f'Bearer {os.environ.get("PROXYCURL_API_KEY")}'}
 
@@ -20,19 +19,15 @@ def scrape_linkedin_profile(linkedin_profile_url: str):
     return data
 
 
-def scrape_linkedin_profile_gistgithub(url:str):
+def scrape_linkedin_profile_gistgithub(url: str):
     """scrape information from LinkedIn profiles,
     Manually scrape the information from the LinkedIn profile"""
 
-    response = requests.get(
-        url
-    )
+    response = requests.get(url)
 
     data = purge_linkedin_data(response.json())
 
     return data
-
-
 
 
 def purge_linkedin_data(data):
@@ -48,6 +43,5 @@ def purge_linkedin_data(data):
     if data.get("groups"):
         for group_dict in data.get("groups"):
             group_dict.pop("profile_pic_url")
-    
 
     return data

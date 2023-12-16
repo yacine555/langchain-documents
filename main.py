@@ -1,10 +1,13 @@
 from langchain.prompts import PromptTemplate
+from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage
 from langchain.chains import LLMChain
 
 
 from tools.linkedin import scrape_linkedin_profile
 from tools.linkedin import scrape_linkedin_profile_gistgithub
+from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 
 
 information = """
@@ -17,6 +20,8 @@ Musk has expressed views that have made him a polarizing figure.[8][9][10] He ha
 
 if __name__ == "__main__":
     print("Hello")
+
+    linkedin_profile_url = linkedin_lookup_agent(name="Yacine Bouakkaz engineer")
 
     prompt_template = """
         given the information {information} about a person, I want you to create:
@@ -32,12 +37,11 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    # linkedin_data = scrape_linkedin_profile(
-    #     linkedin_profile_url="gist.github"
-    # )
+    
+    linkedin_data = scrape_linkedin_profile(linkedin_profile_url="gist.github")
 
-    linkedin_data = scrape_linkedin_profile_gistgithub("https://gist.githubusercontent.com/emarco177/0d6a3f93dd06634d95e46a2782ed7490/raw/fad4d7a87e3e934ad52ba2a968bad9eb45128665/eden-marco.json")
+    linkedin_data = scrape_linkedin_profile_gistgithub(
+        "https://gist.githubusercontent.com/emarco177/0d6a3f93dd06634d95e46a2782ed7490/raw/fad4d7a87e3e934ad52ba2a968bad9eb45128665/eden-marco.json"
+    )
 
-
-
-    print(chain.run(information=linkedin_data))
+    # print(chain.run(information=linkedin_data))
