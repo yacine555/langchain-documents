@@ -21,11 +21,7 @@ Musk has expressed views that have made him a polarizing figure.[8][9][10] He ha
 
 """
 
-name = "Yacine Bouakkaz engineer"
-
-if __name__ == "__main__":
-    print("Hello LangChain")
-
+def icebreaker(name:str)->str:
     linkedin_profile_url = linkedin_lookup_agent(name=name)
     linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
@@ -56,5 +52,13 @@ if __name__ == "__main__":
     # )
 
 
-    print(chain.run(linkedin_information=linkedin_data, twitter_information=tweets))
+    result = chain.run(linkedin_information=linkedin_data, twitter_information=tweets)
+    print(result)
+    return result
+
+if __name__ == "__main__":
+    print("Hello LangChain")
+    icebreaker(name="Yacine Bouakkaz engineer")
+
+
 
