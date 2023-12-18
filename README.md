@@ -33,4 +33,5 @@ Start the application by running:
 
 ```bash
 pipenv run python main.py
+pipenv run python ./tools/twitter.py
 ```
