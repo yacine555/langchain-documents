@@ -5,7 +5,7 @@ from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.chains import LLMChain
-
+from langchain.callbacks import get_openai_callback
 
 from tools.linkedin import scrape_linkedin_profile
 from tools.linkedin import scrape_linkedin_profile_gistgithub
@@ -62,9 +62,24 @@ def icebreaker(name: str) -> Tuple[PersonIntel, str]:
 
     return person_intel_parser.parse(result), linkedin_data.get("profile_pic_url")
 
+def prompt_cost(question:str):
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo")
+    template = """Question: {question}
+
+    Answer: Let's think step by step."""
+
+    prompt = PromptTemplate(template=template, input_variables=["question"])
+    chain = prompt | llm
+
+    with get_openai_callback() as cb:
+        res = chain.invoke({"question": question})
+        print(res)
+        print(cb)
 
 if __name__ == "__main__":
     print("Hello LangChain")
-    result = icebreaker(name="Yacine Bouakkaz engineer")
-    print(result)
+    # result = icebreaker(name="Yacine Bouakkaz engineer")
+    # print(result)
+    prompt_cost("How to create a red sauce pasta")
+
     pass
