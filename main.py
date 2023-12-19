@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from langchain.prompts import PromptTemplate
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
@@ -10,7 +12,7 @@ from tools.linkedin import scrape_linkedin_profile_gistgithub
 from tools.twitter import scrape_user_tweets
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 from agents.twitter_lookup_agent import lookup as twitter_lookup_agent
-
+from output_parser import person_intel_parser, PersonIntel
 
 
 information = """
@@ -21,7 +23,8 @@ Musk has expressed views that have made him a polarizing figure.[8][9][10] He ha
 
 """
 
-def icebreaker(name:str)->str:
+
+def icebreaker(name: str) -> Tuple[PersonIntel, str]:
     linkedin_profile_url = linkedin_lookup_agent(name=name)
     linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
@@ -34,11 +37,15 @@ def icebreaker(name:str)->str:
          2. two interesting facts about them
          3. A topic that may interest them
          4. 2 creative Ice breakers to open a conversation with them 
+         \n{format_instruction}
      """
 
     summary_prompt_template = PromptTemplate(
         input_variables=["linkedin_information", "twitter_information"],
         template=prompt_template,
+        partial_variables={
+            "format_instruction": person_intel_parser.get_format_instructions()
+        },
     )
 
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
@@ -51,14 +58,13 @@ def icebreaker(name:str)->str:
     #     "https://gist.githubusercontent.com/emarco177/0d6a3f93dd06634d95e46a2782ed7490/raw/fad4d7a87e3e934ad52ba2a968bad9eb45128665/eden-marco.json"
     # )
 
-
     result = chain.run(linkedin_information=linkedin_data, twitter_information=tweets)
-    print(result)
-    return result
+
+    return person_intel_parser.parse(result), linkedin_data.get("profile_pic_url")
+
 
 if __name__ == "__main__":
     print("Hello LangChain")
-    icebreaker(name="Yacine Bouakkaz engineer")
-
-
-
+    result = icebreaker(name="Yacine Bouakkaz engineer")
+    print(result)
+    pass
