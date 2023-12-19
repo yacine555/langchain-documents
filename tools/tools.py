@@ -1,4 +1,3 @@
-
 from langchain.utilities import SerpAPIWrapper
 
 
@@ -31,8 +30,8 @@ class CustomSerpAPIWrapper(SerpAPIWrapper):
         ):
             toret = res["knowledge_graph"]["description"]
         elif "snippet" in res["organic_results"][0].keys():
-            #added updadt to langchain default SerpAPIWrapper to grab the linkedin URL
-            toret = res["organic_results"][0]["link"]  
+            # added updadt to langchain default SerpAPIWrapper to grab the linkedin URL
+            toret = res["organic_results"][0]["link"]
 
         else:
             toret = "No good search result found"

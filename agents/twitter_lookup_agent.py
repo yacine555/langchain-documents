@@ -1,20 +1,19 @@
 from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
-from langchain.agents import initialize_agent, Tool, AgentType
 
-from tools.linkedin import scrape_linkedin_profile_gistgithub
+from langchain.agents import initialize_agent, Tool, AgentType
 from tools.tools import get_profile_url
 
 
 def lookup(name: str) -> str:
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
-    template = """Given the full name {name_of_person}, I want you to get the link to the person Linkedin profile page.
-                Your answer should contain only a URL.
-                """
+    template = """given the name {name_of_person} I want you to find a link to their Twitter profile page, and extract from it their username.
+       In Your Final answer only the person's username"""
+
     tools_for_agent = [
         Tool(
-            name="Crawl Google for a linkedin profile page",
-            description="Useful to get the Linkedin Page URL",
+            name="Crawl Google for a Twitter profile page",
+            description="Useful to get the Twitter Page URL",
             func=get_profile_url,
             return_direct=False,
         )
