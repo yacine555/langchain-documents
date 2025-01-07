@@ -1,11 +1,13 @@
+from dotenv import load_dotenv
+import os
 from typing import Tuple
 
-from langchain.prompts import PromptTemplate
-from langchain.llms import OpenAI
-from langchain.chat_models import ChatOpenAI
+from langchain.prompts.prompt import PromptTemplate
+
+from langchain_community.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 from langchain.chains import LLMChain
-from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks.manager import get_openai_callback
 
 from tools.linkedin import scrape_linkedin_profile
 from tools.linkedin import scrape_linkedin_profile_gistgithub
@@ -52,13 +54,15 @@ def icebreaker(name: str) -> Tuple[PersonIntel, str]:
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
+    chain = summary_prompt_template | chain
+
     # linkedin_data = scrape_linkedin_profile(linkedin_profile_url="gist.github")
 
     # linkedin_data = scrape_linkedin_profile_gistgithub(
     #     "https://gist.githubusercontent.com/emarco177/0d6a3f93dd06634d95e46a2782ed7490/raw/fad4d7a87e3e934ad52ba2a968bad9eb45128665/eden-marco.json"
     # )
 
-    result = chain.run(linkedin_information=linkedin_data, twitter_information=tweets)
+    result = chain.invoke(linkedin_information=linkedin_data, twitter_information=tweets)
 
     return person_intel_parser.parse(result), linkedin_data.get("profile_pic_url")
 
@@ -77,10 +81,12 @@ def prompt_cost(question:str):
         print(cb)
 
 if __name__ == "__main__":
+    load_dotenv()
     print("Hello LangChain")
-    result = icebreaker(name="Yacine Bouakkaz engineer")
-    print(result)
+    print(os.getenv("LANGCHAIN_PROJECT"))
+    # result = icebreaker(name="Yacine Bouakkaz engineer")
+    # print(result)
 
-    prompt_cost("How to create a red sauce pasta")
+    # prompt_cost("How to create a red sauce pasta")
 
     pass
