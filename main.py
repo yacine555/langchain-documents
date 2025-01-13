@@ -1,10 +1,15 @@
 from dotenv import load_dotenv
 import os
+
+load_dotenv()
+
 from typing import Tuple
 
 from langchain.prompts.prompt import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from langchain.schema import HumanMessage
 from langchain.chains import LLMChain
 from langchain_community.callbacks.manager import get_openai_callback
@@ -52,9 +57,7 @@ def icebreaker(name: str) -> Tuple[PersonIntel, str]:
 
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo")
 
-    chain = LLMChain(llm=llm, prompt=summary_prompt_template)
-
-    chain = summary_prompt_template | chain
+    chain = summary_prompt_template | llm 
 
     # linkedin_data = scrape_linkedin_profile(linkedin_profile_url="gist.github")
 
@@ -62,31 +65,40 @@ def icebreaker(name: str) -> Tuple[PersonIntel, str]:
     #     "https://gist.githubusercontent.com/emarco177/0d6a3f93dd06634d95e46a2782ed7490/raw/fad4d7a87e3e934ad52ba2a968bad9eb45128665/eden-marco.json"
     # )
 
-    result = chain.invoke(linkedin_information=linkedin_data, twitter_information=tweets)
+    result = chain.invoke(input={
+        "linkedin_information":linkedin_data,
+        "twitter_information":tweets
+        })
 
     return person_intel_parser.parse(result), linkedin_data.get("profile_pic_url")
 
-def prompt_cost(question:str):
+
+def prompt_cost(question: str):
     llm = ChatOpenAI(model_name="gpt-3.5-turbo")
     template = """Question: {question}
 
     Answer: Let's think step by step."""
 
     prompt = PromptTemplate(template=template, input_variables=["question"])
-    chain = prompt | llm
+    chain = prompt | llm 
 
     with get_openai_callback() as cb:
         res = chain.invoke({"question": question})
         print(res)
         print(cb)
 
+
 if __name__ == "__main__":
-    load_dotenv()
+
     print("Hello LangChain")
     print(os.getenv("LANGCHAIN_PROJECT"))
     # result = icebreaker(name="Yacine Bouakkaz engineer")
     # print(result)
 
-    # prompt_cost("How to create a red sauce pasta")
+    prompt_cost("How to create a red sauce pasta")
+
+    print(
+        scrape_linkedin_profile(linkedin_profile_url="https://www.linkedin.com/in/yacinebouakkaz/",  mock=True)
+    )
 
     pass

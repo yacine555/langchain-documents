@@ -6,10 +6,12 @@ Project to explore Langchain tool wich implement those features:
 
 ### Prerequisites and Dependencies
 
-Before you begin, ensure you have the following installed:
+Before you begin, ensure you have the following installed and setup:
 - Python 3.11.x or later. Note that this was only tested on 3.11.8
 - [Pipenv](https://pipenv.pypa.io/en/latest/) : tested on v2024.4.0
-
+- Langchain account
+- OpenAI account
+- [Nubela Proxy Curl account](https://nubela.co/proxycurl/) to facilitate connection with LinkedIn
 
 ```bash
 python --version

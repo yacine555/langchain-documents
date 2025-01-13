@@ -1,5 +1,5 @@
 from langchain.prompts.prompt import PromptTemplate
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
 from langchain.agents import initialize_agent, Tool, AgentType
 from tools.tools import get_profile_url
@@ -31,6 +31,6 @@ def lookup(name: str) -> str:
         template=template, input_variables=["name_of_person"]
     )
 
-    linkedin_profile_url = agent.run(prompt_template.format(name_of_person=name))
+    linkedin_profile_url = agent.invoke({prompt_template.format(name_of_person=name)})
 
     return linkedin_profile_url
