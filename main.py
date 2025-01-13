@@ -92,13 +92,17 @@ if __name__ == "__main__":
 
     print("Hello LangChain")
     print(os.getenv("LANGCHAIN_PROJECT"))
-    # result = icebreaker(name="Yacine Bouakkaz engineer")
-    # print(result)
 
+    
+
+    # Estimate API call cost
     prompt_cost("How to create a red sauce pasta")
 
-    print(
-        scrape_linkedin_profile(linkedin_profile_url="https://www.linkedin.com/in/yacinebouakkaz/",  mock=True)
-    )
+    # Scape Linked in profile
+    print(scrape_linkedin_profile(linkedin_profile_url="https://www.linkedin.com/in/yacinebouakkaz/",  mock=True))
+
+    
+    result = icebreaker(name="Yacine Bouakkaz Technology")
+    print(result)
 
     pass

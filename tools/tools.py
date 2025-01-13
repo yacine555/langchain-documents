@@ -1,4 +1,6 @@
 from langchain_community.utilities import SerpAPIWrapper
+from langchain_community.tools.tavily_search import TavilySearchResults
+
 
 
 class CustomSerpAPIWrapper(SerpAPIWrapper):
@@ -40,9 +42,13 @@ class CustomSerpAPIWrapper(SerpAPIWrapper):
 
 def get_profile_url(text: str) -> str:
     """Searches for LinkedIn Profile Page."""
-
     search = CustomSerpAPIWrapper()
-
     res = search.run(f"{text}")
+    return res
 
+
+def get_profile_url_tavily(name: str):
+    """Searches for Linkedin or twitter Profile Page."""
+    search = TavilySearchResults()
+    res = search.run(f"{name}")
     return res
